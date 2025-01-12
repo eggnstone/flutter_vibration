@@ -57,6 +57,9 @@ public class VibrationPluginSwift: NSObject, FlutterPlugin {
     }
     
     private func supportsHaptics() -> Bool {
+        // DEBUG
+        return true
+
         if #available(iOS 13.0, *) {
             return CHHapticEngine.capabilitiesForHardware().supportsHaptics
         }
@@ -101,6 +104,7 @@ public class VibrationPluginSwift: NSObject, FlutterPlugin {
             }
             i += 1
         }
+
         // Try to play engine
         do {
             if let engine = VibrationPluginSwift.engine {
@@ -113,6 +117,7 @@ public class VibrationPluginSwift: NSObject, FlutterPlugin {
             print("Failed to play pattern: \(error.localizedDescription).")
         }
     }
+
     @available(iOS 13.0, *)
     private func cancelVibration() {
         VibrationPluginSwift.engine?.stop(completionHandler: { error in
@@ -168,11 +173,12 @@ public class VibrationPluginSwift: NSObject, FlutterPlugin {
         case "cancel":
             if #available(iOS 13.0, *) {
                 cancelVibration()
+                result(true)
+                return
             } else {
                 result(false)
+                return
             }
-            result(true)
-            return
         default:
             result(FlutterMethodNotImplemented)
         }
